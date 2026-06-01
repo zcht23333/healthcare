@@ -1,0 +1,1 @@
+package com.zch; import org.springframework.context.support.ClassPathXmlApplicationContext; public class ContextLoadTest { public static void main(String[] args) { new ClassPathXmlApplicationContext("applicationContext.xml", "spring-mvc.xml"); System.out.println("SUCCESS"); } }
