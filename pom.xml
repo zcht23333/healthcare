@@ -8,12 +8,12 @@
   <groupId>com.zch</groupId>
   <artifactId>healthcare</artifactId>
   <version>1.0.0</version>
+  <!-- 触发IDEA Maven 重新同步 -->
   <!-- 项目是 Web 应用，打包方式统一使用 war -->
   <packaging>war</packaging>
 
   <name>healthcare</name>
   <url>http://maven.apache.org</url>
-
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
@@ -59,8 +59,8 @@
       <version>2.1.1</version>
     </dependency>
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
       <version>8.0.33</version>
     </dependency>
     <dependency>
