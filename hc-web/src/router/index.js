@@ -1,19 +1,31 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import Layout from '../views/layout/Layout.vue'
 
 const routes = [
+  // 访问根目录重定向到登录页
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    redirect: '/login'
   },
+  // 独立的登录页路由 (没有嵌套在 Layout 里，因为它不需要左侧菜单)
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/LoginView.vue')
+  },
+  // 后台主界面
+  {
+    path: '/layout',
+    name: 'Layout',
+    component: Layout,
+    redirect: '/home',
+    children: [
+      {
+        path: '/home', // 注意这里，可以加 / 变成绝对路径
+        name: 'Home',
+        component: () => import('../views/HomeView.vue')
+      }
+    ]
   }
 ]
 
