@@ -29,6 +29,11 @@ const routes = [
         path: '/company', // 必须要和左侧菜单 Sidebar.vue 里的 index 对应上！
         name: 'Company',
         component: () => import('../views/CompanyView.vue')
+      },
+      {
+        path: '/drug', // 对应 Sidebar 里的菜单 index
+        name: 'Drug',
+        component: () => import('../views/DrugView.vue')
       }
     ]
   }

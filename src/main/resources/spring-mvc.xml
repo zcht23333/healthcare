@@ -10,10 +10,13 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <!-- 1. 扫描控制器 -->
     <context:component-scan base-package="com.zch.controller" />
 
+    <!-- 2. 开启 MVC 注解驱动 -->
     <mvc:annotation-driven />
 
+    <!-- 3. 跨域配置 -->
     <mvc:cors>
         <mvc:mapping path="/**"
                      allowed-origins="*"
@@ -23,12 +26,25 @@
                      max-age="3600"/>
     </mvc:cors>
 
+    <!-- 4. 文件上传解析器 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="maxUploadSize" value="10485760"/>  <!-- 10MB -->
+    </bean>
+
+    <!-- 5. 静态资源映射（上传文件访问） -->
+    <mvc:resources mapping="/upload/**" location="file:D:/healthcare_upload/"/>
+
+    <!-- 6. 拦截器配置（合并：在原拦截器上增加 /upload/** 排除） -->
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/captcha"/>
             <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/upload/**"/>   <!-- 新增排除，避免拦截静态资源 -->
             <bean class="com.zch.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
+
 </beans>
