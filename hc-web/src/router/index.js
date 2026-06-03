@@ -34,6 +34,11 @@ const routes = [
         path: '/drug', // 对应 Sidebar 里的菜单 index
         name: 'Drug',
         component: () => import('../views/DrugView.vue')
+      },
+      {
+        path: '/policy', // 对应 Sidebar 左侧菜单的 index
+        name: 'Policy',
+        component: () => import('../views/PolicyView.vue')
       }
     ]
   }
