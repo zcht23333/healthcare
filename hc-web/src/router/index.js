@@ -49,6 +49,21 @@ const routes = [
         path: '/location',
         name: 'Location',
         component: () => import('../views/LocationView.vue')
+      },
+      {
+        path: '/pharmaPolicy',
+        name: 'PharmaPolicy',
+        component: () => import('../views/PharmaPolicyView.vue')
+      },
+      {
+        path: '/doctor',
+        name: 'Doctor',
+        component: () => import('../views/DoctorView.vue')
+      },
+      {
+        path: '/material',
+        name: 'Material',
+        component: () => import('../views/MaterialView.vue')
       }
     ]
   }

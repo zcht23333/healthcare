@@ -19,10 +19,16 @@ public class StatController {
     @GetMapping("/overview")
     public Map<String, Object> overview() {
         Map<String, Object> data = new HashMap<>();
-        // 获取三个维度的统计数据
+
+        // 四大核心卡片数据
         data.put("totalCompany", statMapper.countCompanies());
         data.put("totalDrug", statMapper.countDrugs());
+        data.put("totalDoctor", statMapper.countDoctors());
+        data.put("totalPolicy", statMapper.countPolicies());
+
+        // ECharts 双图表数据
         data.put("pieData", statMapper.getDrugCountByCompany());
+        data.put("barData", statMapper.getDoctorCountByDept());
 
         Map<String, Object> result = new HashMap<>();
         result.put("code", 200);
