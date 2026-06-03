@@ -4,7 +4,7 @@
       <div class="header-action">
         <el-form :inline="true" :model="queryParams" class="search-form">
           <el-form-item label="地点名称">
-            <el-input v-model="queryParams.locationName" placeholder="如：某某大药房" clearable @keyup.enter="handleSearch" />
+            <el-input v-model="queryParams.locationName" placeholder="请输入地点名称" clearable @keyup.enter="handleSearch" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleSearch">搜索</el-button>
@@ -12,7 +12,7 @@
           </el-form-item>
         </el-form>
         <div class="action-btn">
-          <el-button type="success" icon="Plus" @click="handleAdd">新增销售地点</el-button>
+          <el-button type="primary" icon="Plus" @click="handleAdd">新增销售地点</el-button>
         </div>
       </div>
 

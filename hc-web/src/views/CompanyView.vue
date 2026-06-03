@@ -18,7 +18,7 @@
         </el-form>
         
         <div class="action-btn">
-          <el-button type="success" icon="Plus" @click="handleAdd">新增医药公司</el-button>
+          <el-button type="primary" icon="Plus" @click="handleAdd">新增医药公司</el-button>
         </div>
       </div>
 

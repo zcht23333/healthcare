@@ -4,7 +4,7 @@
       <div class="header-action">
         <el-form :inline="true" :model="queryParams" class="search-form">
           <el-form-item label="医生姓名">
-            <el-input v-model="queryParams.realName" placeholder="请输入姓名模糊查询" clearable @keyup.enter="handleSearch" />
+            <el-input v-model="queryParams.realName" placeholder="请输入姓名" clearable @keyup.enter="handleSearch" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleSearch">搜索</el-button>
@@ -12,7 +12,7 @@
           </el-form-item>
         </el-form>
         <div class="action-btn">
-          <el-button type="success" icon="Plus" @click="handleAdd">新增医生</el-button>
+          <el-button type="primary" icon="Plus" @click="handleAdd">新增医生</el-button>
         </div>
       </div>
 

@@ -4,7 +4,7 @@
       <div class="header-action">
         <el-form :inline="true" :model="queryParams" class="search-form">
           <el-form-item label="材料名称">
-            <el-input v-model="queryParams.materialName" placeholder="请输入材料名称模糊查询" clearable @keyup.enter="handleSearch" />
+            <el-input v-model="queryParams.materialName" placeholder="请输入材料名称" clearable @keyup.enter="handleSearch" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleSearch">搜索</el-button>
@@ -12,7 +12,7 @@
           </el-form-item>
         </el-form>
         <div class="action-btn">
-          <el-button type="success" icon="Plus" @click="handleAdd">新增材料</el-button>
+          <el-button type="primary" icon="Plus" @click="handleAdd">新增材料</el-button>
         </div>
       </div>
 
@@ -54,7 +54,7 @@
     <el-dialog :title="dialogTitle" v-model="dialogVisible" width="500px" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="材料名称" prop="materialName">
-          <el-input v-model="form.materialName" placeholder="如：首营企业审批表" />
+          <el-input v-model="form.materialName" placeholder="请输入材料名称" />
         </el-form-item>
         <el-form-item label="材料类型" prop="materialType">
           <el-select v-model="form.materialType" placeholder="请选择类型" style="width: 100%">

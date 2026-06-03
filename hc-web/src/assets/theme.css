@@ -8,6 +8,8 @@
   --el-color-primary-light-9: #f0f5ff;
   --el-border-radius-base: 12px; /* 全局默认圆角变大 */
   --el-border-radius-small: 8px;
+
+  
 }
 
 /* 2. 全局卡片 (el-card) 极致拟物化 */

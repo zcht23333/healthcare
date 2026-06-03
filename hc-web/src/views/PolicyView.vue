@@ -4,7 +4,7 @@
       <div class="header-action">
         <el-form :inline="true" :model="queryParams" class="search-form">
           <el-form-item label="政策标题">
-            <el-input v-model="queryParams.policyTitle" placeholder="请输入标题模糊查询" clearable @keyup.enter="handleSearch" />
+            <el-input v-model="queryParams.policyTitle" placeholder="请输入标题" clearable @keyup.enter="handleSearch" />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="Search" @click="handleSearch">搜索</el-button>
@@ -12,7 +12,7 @@
           </el-form-item>
         </el-form>
         <div class="action-btn">
-          <el-button type="success" icon="Plus" @click="handleAdd">发布新政策</el-button>
+          <el-button type="primary" icon="Plus" @click="handleAdd">发布新政策</el-button>
         </div>
       </div>
 

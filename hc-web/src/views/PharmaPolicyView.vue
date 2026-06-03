@@ -12,17 +12,17 @@
           </el-form-item>
         </el-form>
         <div class="action-btn">
-          <el-button type="success" icon="Plus" @click="handleAdd">发布公司政策</el-button>
+          <el-button type="primary" icon="Plus" @click="handleAdd">发布公司政策</el-button>
         </div>
       </div>
 
       <el-table v-loading="loading" :data="tableData" border stripe style="width: 100%" :header-cell-style="{background:'#f5f7fa', color:'#606266'}">
         <el-table-column type="index" label="序号" width="60" align="center" />
-        <el-table-column prop="companyName" label="所属医药公司" min-width="180">
-          <template #default="scope">
-            <el-tag type="success">{{ scope.row.companyName || '未知' }}</el-tag>
-          </template>
-        </el-table-column>
+      <el-table-column prop="companyName" label="所属医药公司" min-width="180">
+        <template #default="scope">
+          {{ scope.row.companyName || '未知' }}
+        </template>
+      </el-table-column>
         <el-table-column prop="policyTitle" label="政策标题" min-width="250" show-overflow-tooltip>
           <template #default="scope">
             <span style="font-weight: bold; color: #409EFF;">{{ scope.row.policyTitle }}</span>

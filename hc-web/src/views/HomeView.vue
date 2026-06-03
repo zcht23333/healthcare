@@ -1,7 +1,7 @@
 <template>
   <div class="home-container">
     <div class="welcome-header">
-      <h2>👋 早安，超级管理员！今天又是顺利的一天。</h2>
+      <h2>👋 欢迎，超级管理员！今天又是顺利的一天。</h2>
       <p>今天是 {{ currentDate }}，系统各项服务运行健康，以下是实时数据概览。</p>
     </div>
 
@@ -73,14 +73,14 @@
     <div class="chart-card">
       <div class="card-header">系统核心业务快捷通道</div>
       <div class="quick-actions-grid">
-        <div class="quick-btn" @click="$router.push('/company')"><span class="emoji">🏢</span> 医药公司管理</div>
-        <div class="quick-btn" @click="$router.push('/drug')"><span class="emoji">💊</span> 药品信息管理</div>
-        <div class="quick-btn" @click="$router.push('/doctor')"><span class="emoji">👨‍⚕️</span> 医生信息管理</div>
-        <div class="quick-btn" @click="$router.push('/policy')"><span class="emoji">📄</span> 医保政策发布</div>
-        <div class="quick-btn" @click="$router.push('/pharmaPolicy')"><span class="emoji">💌</span> 医药公司政策</div>
-        <div class="quick-btn" @click="$router.push('/location')"><span class="emoji">🏥</span> 销售地点管理</div>
-        <div class="quick-btn" @click="$router.push('/city')"><span class="emoji">📍</span> 城市信息管理</div>
-        <div class="quick-btn" @click="$router.push('/material')"><span class="emoji">📁</span> 必备材料审查</div>
+        <div class="quick-btn" @click="$router.push('/company')">医药公司管理</div>
+        <div class="quick-btn" @click="$router.push('/drug')">药品信息管理</div>
+        <div class="quick-btn" @click="$router.push('/doctor')">医生信息管理</div>
+        <div class="quick-btn" @click="$router.push('/policy')">医保政策发布</div>
+        <div class="quick-btn" @click="$router.push('/pharmaPolicy')">医药公司政策</div>
+        <div class="quick-btn" @click="$router.push('/location')">销售地点管理</div>
+        <div class="quick-btn" @click="$router.push('/city')">城市信息管理</div>
+        <div class="quick-btn" @click="$router.push('/material')">必备材料审查</div>
       </div>
     </div>
   </div>
