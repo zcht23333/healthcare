@@ -1,0 +1,85 @@
+/* hc-web/src/assets/theme.css */
+
+/* 1. 重新定义全局主色调 (莫兰迪蓝) 和基础圆角 */
+:root {
+  --el-color-primary: #8cb4f9; /* 莫兰迪蓝 */
+  --el-color-primary-light-3: #a1c4fd;
+  --el-color-primary-light-7: #d2e3fe;
+  --el-color-primary-light-9: #f0f5ff;
+  --el-border-radius-base: 12px; /* 全局默认圆角变大 */
+  --el-border-radius-small: 8px;
+}
+
+/* 2. 全局卡片 (el-card) 极致拟物化 */
+.el-card {
+  border-radius: 20px !important;
+  border: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* 3. 全局输入框 (el-input) "果冻感" 设计 */
+.el-input__wrapper, .el-textarea__inner {
+  background-color: #f8fafc !important;
+  box-shadow: none !important;
+  border: 1px solid transparent !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.el-input__wrapper:hover, .el-textarea__inner:hover {
+  background-color: #f1f5f9 !important;
+}
+.el-input__wrapper.is-focus, .el-textarea__inner:focus {
+  background-color: #ffffff !important;
+  border-color: var(--el-color-primary) !important;
+  box-shadow: 0 0 0 3px rgba(140, 180, 249, 0.2) !important;
+}
+
+/* 4. 全局表格 (el-table) 无边框通透设计 */
+.el-table {
+  border-radius: 16px !important;
+  border: 1px solid #f1f5f9 !important;
+}
+.el-table::before {
+  display: none !important; /* 去掉表格底部的默认灰线 */
+}
+.el-table th.el-table__cell {
+  background-color: #f8fafc !important;
+  color: #4a5568 !important;
+  font-weight: 600 !important;
+  border-bottom: none !important;
+  padding: 12px 0 !important;
+}
+.el-table td.el-table__cell {
+  border-bottom: 1px solid #f8fafc !important;
+  color: #4a5568 !important;
+  padding: 12px 0 !important;
+}
+.el-table__row:hover > td {
+  background-color: #fdfbfb !important;
+}
+
+/* 5. 全局弹窗 (el-dialog) 拟物化大圆角 */
+.el-dialog {
+  border-radius: 20px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+}
+.el-dialog__header {
+  border-bottom: 1px solid #f1f5f9;
+  margin-right: 0 !important;
+  padding-bottom: 20px !important;
+}
+.el-dialog__title {
+  font-weight: 600 !important;
+  color: #2d3748 !important;
+}
+
+/* 6. 全局分页器 (el-pagination) 悬浮感 */
+.el-pagination .el-pager li {
+  background-color: #f8fafc !important;
+  border-radius: 8px !important;
+  margin: 0 4px !important;
+  font-weight: 600 !important;
+}
+.el-pagination .el-pager li.is-active {
+  background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%) !important;
+  color: #fff !important;
+}
