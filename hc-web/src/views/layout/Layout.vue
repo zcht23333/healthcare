@@ -24,19 +24,25 @@ import AppMain from './components/AppMain.vue'
 <style scoped>
 .app-wrapper {
   height: 100vh;
-  width: 100%;
+  width: 100vw;
+  overflow: hidden; /* 彻底切断 Layout 级别的外层溢出 */
 }
 .main-container {
   height: 100%;
 }
 .content-container {
+  height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: column; /* 垂直排布：头部 + 核心区 */
 }
+
 /* 这里是灵魂所在：给内容区注入登录页同款的极浅呼吸背景 */
 .app-main-box {
+  flex: 1; /* 自动撑满 Header 以外的所有剩余空间 */
   background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-  padding: 20px;
-  overflow-y: auto;
+  padding: 24px;
+  overflow-y: auto; /* 整个系统唯一合法且可见的纵向滚动条 */
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 </style>
