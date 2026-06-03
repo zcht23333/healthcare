@@ -39,6 +39,16 @@ const routes = [
         path: '/policy', // 对应 Sidebar 左侧菜单的 index
         name: 'Policy',
         component: () => import('../views/PolicyView.vue')
+      },
+      {
+        path: '/city',
+        name: 'City',
+        component: () => import('../views/CityView.vue')
+      },
+      {
+        path: '/location',
+        name: 'Location',
+        component: () => import('../views/LocationView.vue')
       }
     ]
   }

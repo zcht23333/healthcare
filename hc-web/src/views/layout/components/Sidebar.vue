@@ -20,6 +20,18 @@
         <el-icon><FirstAidKit /></el-icon>
         <span>药品信息管理</span>
       </el-menu-item>
+      <el-menu-item index="/policy">
+        <el-icon><Document /></el-icon>
+        <span>医保政策管理</span>
+      </el-menu-item>
+      <el-menu-item index="/city">
+        <el-icon><Location /></el-icon>
+        <span>城市信息管理</span>
+      </el-menu-item>
+      <el-menu-item index="/location">
+        <el-icon><Store /></el-icon>
+        <span>销售地点管理</span>
+      </el-menu-item>
     </el-menu>
   </el-aside>
 </template>
