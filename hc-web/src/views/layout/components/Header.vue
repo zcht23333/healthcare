@@ -10,18 +10,18 @@
         <div class="user-profile">
           <el-avatar :size="36" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" class="avatar"/>
           <span class="username">超级管理员</span>
-          <el-icon class="dropdown-icon"><CaretBottom /></el-icon>
+          <el-icon class="dropdown-icon"><el-icon-caret-bottom /></el-icon>
         </div>
         <template #dropdown>
           <el-dropdown-menu class="custom-dropdown">
             <el-dropdown-item command="profile">
-              <el-icon><User /></el-icon> 个人中心
+              <el-icon><el-icon-user /></el-icon> 个人中心
             </el-dropdown-item>
             <el-dropdown-item command="settings">
-              <el-icon><Setting /></el-icon> 系统设置
+              <el-icon><el-icon-setting /></el-icon> 系统设置
             </el-dropdown-item>
             <el-dropdown-item divided command="logout" style="color: #f56c6c;">
-              <el-icon><SwitchButton /></el-icon> 退出登录
+              <el-icon><el-icon-switch-button /></el-icon> 退出登录
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>
@@ -32,7 +32,7 @@
 
 <script setup>
 import { useRouter } from 'vue-router'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
 const router = useRouter()
 

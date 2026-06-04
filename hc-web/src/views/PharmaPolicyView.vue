@@ -7,12 +7,12 @@
             <el-input v-model="queryParams.policyTitle" placeholder="请输入政策标题" clearable @keyup.enter="handleSearch" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleSearch">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
         <div class="action-btn">
-          <el-button type="primary" icon="Plus" @click="handleAdd">发布公司政策</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="handleAdd">发布公司政策</el-button>
         </div>
       </div>
 
@@ -32,16 +32,16 @@
         <el-table-column prop="endDate" label="生效结束日期" width="130" align="center" />
         <el-table-column label="操作" width="180" align="center" fixed="right">
           <template #default="scope">
-            <el-button type="primary" link icon="Edit" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button type="danger" link icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="primary" link icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="danger" link icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
       <div class="pagination-container">
         <el-pagination
-          v-model:current-page="queryParams.pageNum"
-          v-model:page-size="queryParams.pageSize"
+          current-page.sync="queryParams.pageNum"
+          page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -51,7 +51,7 @@
       </div>
     </el-card>
 
-    <el-dialog :title="dialogTitle" v-model="dialogVisible" width="900px" top="5vh" @close="handleCloseDialog">
+    <el-dialog :title="dialogTitle" visible.sync="dialogVisible" width="900px" top="5vh" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="110px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -102,7 +102,7 @@
 import { ref, reactive, onMounted, shallowRef, onBeforeUnmount } from 'vue'
 import { getPharmaPolicyList, addPharmaPolicy, updatePharmaPolicy, deletePharmaPolicy } from '@/api/pharmaPolicy'
 import { getCompanyList } from '@/api/company' // 引入公司接口
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
 import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'

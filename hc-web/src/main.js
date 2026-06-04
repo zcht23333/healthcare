@@ -1,21 +1,20 @@
-import { createApp } from 'vue'
+import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
-import './assets/theme.css' 
+// 引入 Vue 2 版的 Element UI
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
-const app = createApp(App)
+// 引入我们的莫兰迪高级主题
+import './assets/theme.css'
 
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
+Vue.config.productionTip = false
+Vue.use(ElementUI)
 
-app.use(store)
-   .use(router)
-   .use(ElementPlus, { locale: zhCn })
-   .mount('#app')
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount('#app')

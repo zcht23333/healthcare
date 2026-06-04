@@ -13,45 +13,45 @@
     >
       <div class="menu-group-title">数据监控</div>
       <el-menu-item index="/home">
-        <el-icon><DataLine /></el-icon>
+        <el-icon><el-icon-data-line /></el-icon>
         <span>首页大盘</span>
       </el-menu-item>
 
       <div class="menu-group-title">核心业务</div>
       <el-menu-item index="/company">
-        <el-icon><OfficeBuilding /></el-icon>
+        <el-icon><el-icon-office-building /></el-icon>
         <span>医药公司管理</span>
       </el-menu-item>
       <el-menu-item index="/drug">
-        <el-icon><FirstAidKit /></el-icon>
+        <el-icon><el-icon-first-aid-kit /></el-icon>
         <span>药品信息管理</span>
       </el-menu-item>
       <el-menu-item index="/doctor">
-        <el-icon><UserFilled /></el-icon>
+        <el-icon><el-icon-user-solid /></el-icon>
         <span>医生信息管理</span>
       </el-menu-item>
 
       <div class="menu-group-title">政策与文档</div>
       <el-menu-item index="/policy">
-        <el-icon><Document /></el-icon>
+        <el-icon><el-icon-document /></el-icon>
         <span>医保政策管理</span>
       </el-menu-item>
       <el-menu-item index="/pharmaPolicy">
-        <el-icon><Postcard /></el-icon>
+        <el-icon><el-icon-postcard /></el-icon>
         <span>医药公司政策管理</span>
       </el-menu-item>
       <el-menu-item index="/material">
-        <el-icon><Files /></el-icon>
+        <el-icon><el-icon-folder-opened /></el-icon>
         <span>必备材料管理</span>
       </el-menu-item>
 
       <div class="menu-group-title">网点配置</div>
       <el-menu-item index="/location">
-        <el-icon><Shop /></el-icon>
+        <el-icon><el-icon-s-shop /></el-icon>
         <span>销售地点管理</span>
       </el-menu-item>
       <el-menu-item index="/city">
-        <el-icon><Location /></el-icon>
+        <el-icon><el-icon-location /></el-icon>
         <span>城市信息管理</span>
       </el-menu-item>
     </el-menu>

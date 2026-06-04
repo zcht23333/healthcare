@@ -7,12 +7,12 @@
             <el-input v-model="queryParams.realName" placeholder="请输入姓名" clearable @keyup.enter="handleSearch" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleSearch">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
         <div class="action-btn">
-          <el-button type="primary" icon="Plus" @click="handleAdd">新增医生</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="handleAdd">新增医生</el-button>
         </div>
       </div>
 
@@ -29,17 +29,17 @@
         <el-table-column prop="phone" label="联系电话" width="140" align="center" />
         <el-table-column label="操作" width="220" align="center" fixed="right">
           <template #default="scope">
-            <el-button type="primary" link icon="Edit" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="primary" link icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
             <el-button type="warning" link icon="Key" @click="handleResetPwd(scope.row)">重置密码</el-button>
-            <el-button type="danger" link icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="danger" link icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
       <div class="pagination-container">
         <el-pagination
-          v-model:current-page="queryParams.pageNum"
-          v-model:page-size="queryParams.pageSize"
+          current-page.sync="queryParams.pageNum"
+          page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -49,7 +49,7 @@
       </div>
     </el-card>
 
-    <el-dialog :title="dialogTitle" v-model="dialogVisible" width="500px" @close="handleCloseDialog">
+    <el-dialog :title="dialogTitle"  visible.sync="dialogVisible"  width="500px" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="登录账号" prop="username">
           <el-input v-model="form.username" placeholder="请输入工号或手机号作为账号" :disabled="form.id != null" />
@@ -80,7 +80,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { getDoctorList, addDoctor, updateDoctor, deleteDoctor, resetDoctorPwd } from '@/api/doctor'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
 const queryParams = reactive({ pageNum: 1, pageSize: 10, realName: '' })
 const loading = ref(false)

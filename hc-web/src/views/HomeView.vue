@@ -10,7 +10,7 @@
       <el-col :span="6">
         <div class="stat-card">
           <div class="icon-wrapper blue">
-            <el-icon><OfficeBuilding /></el-icon>
+            <el-icon><el-icon-office-building /></el-icon>
           </div>
           <div class="stat-info">
             <div class="stat-title">入驻医药公司</div>
@@ -21,7 +21,7 @@
       <el-col :span="6">
         <div class="stat-card">
           <div class="icon-wrapper green">
-            <el-icon><FirstAidKit /></el-icon>
+            <el-icon><el-icon-first-aid-kit /></el-icon>
           </div>
           <div class="stat-info">
             <div class="stat-title">平台收录药品</div>
@@ -32,7 +32,7 @@
       <el-col :span="6">
         <div class="stat-card">
           <div class="icon-wrapper orange">
-            <el-icon><UserFilled /></el-icon>
+            <el-icon><el-icon-user-solid /></el-icon>
           </div>
           <div class="stat-info">
             <div class="stat-title">注册医生总数</div>
@@ -43,7 +43,7 @@
       <el-col :span="6">
         <div class="stat-card">
           <div class="icon-wrapper purple">
-            <el-icon><Document /></el-icon>
+            <el-icon><el-icon-document /></el-icon>
           </div>
           <div class="stat-info">
             <div class="stat-title">发布医保政策</div>

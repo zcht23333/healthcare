@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import { Message as ElMessage } from 'element-ui'
 import router from '@/router' // 【重要】引入路由，用于被踢回登录页
 
 const service = axios.create({

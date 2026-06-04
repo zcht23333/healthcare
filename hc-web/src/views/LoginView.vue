@@ -64,10 +64,8 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { fetchCaptcha, login } from '@/api/login'
-import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
-
-const router = useRouter()
+import router from '@/router' // 【关键修改1】在 Vue 2.7 中直接引入路由实例即可
+import { Message as ElMessage } from 'element-ui' // 【关键修改2】替换为 Element UI
 
 // 表单数据
 const loginForm = reactive({

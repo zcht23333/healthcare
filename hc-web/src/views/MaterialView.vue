@@ -7,12 +7,12 @@
             <el-input v-model="queryParams.materialName" placeholder="请输入材料名称" clearable @keyup.enter="handleSearch" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" icon="Search" @click="handleSearch">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+            <el-button icon="el-icon-refresh" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
         <div class="action-btn">
-          <el-button type="primary" icon="Plus" @click="handleAdd">新增材料</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="handleAdd">新增材料</el-button>
         </div>
       </div>
 
@@ -32,16 +32,16 @@
         <el-table-column prop="createTime" label="录入时间" width="180" align="center" />
         <el-table-column label="操作" width="180" align="center" fixed="right">
           <template #default="scope">
-            <el-button type="primary" link icon="Edit" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-button type="danger" link icon="Delete" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="primary" link icon="el-icon-edit" @click="handleEdit(scope.row)">编辑</el-button>
+            <el-button type="danger" link icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
       <div class="pagination-container">
         <el-pagination
-          v-model:current-page="queryParams.pageNum"
-          v-model:page-size="queryParams.pageSize"
+          current-page.sync="queryParams.pageNum"
+          page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -51,7 +51,7 @@
       </div>
     </el-card>
 
-    <el-dialog :title="dialogTitle" v-model="dialogVisible" width="500px" @close="handleCloseDialog">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="500px" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="材料名称" prop="materialName">
           <el-input v-model="form.materialName" placeholder="请输入材料名称" />
@@ -81,7 +81,7 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { getMaterialList, addMaterial, updateMaterial, deleteMaterial } from '@/api/material'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
 const queryParams = reactive({ pageNum: 1, pageSize: 10, materialName: '' })
 const loading = ref(false)
