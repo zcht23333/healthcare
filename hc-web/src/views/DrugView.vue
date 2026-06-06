@@ -33,7 +33,6 @@
             <el-button type="danger" link icon="el-icon-delete" @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="drugName" label="药品名称" min-width="150" />
         
         <el-table-column label="药品图片" width="100" align="center">
           <template #default="scope">
@@ -54,8 +53,8 @@
 
       <div class="pagination-container">
         <el-pagination
-          current-page.sync="queryParams.pageNum"
-          page-size.sync="queryParams.pageSize"
+          :current-page.sync="queryParams.pageNum"
+          :page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -65,7 +64,7 @@
       </div>
     </el-card>
 
-    <el-dialog :title="dialogTitle" visible.sync="dialogVisible" width="500px" @close="handleCloseDialog">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="500px" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="药品名称" prop="drugName">
           <el-input v-model="form.drugName" placeholder="请输入药品名称" />
@@ -102,7 +101,7 @@
             :before-upload="beforeUpload"
           >
             <img v-if="form.drugImage" :src="form.drugImage" class="avatar" />
-            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -117,20 +116,19 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+// 【修复9】引入 nextTick，处理表单清空与延迟赋值
+import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { getDrugList, addDrug, updateDrug, deleteDrug } from '@/api/drug'
-import { getCompanyList } from '@/api/company' // 复用之前写好的公司接口
+import { getCompanyList } from '@/api/company'
 import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
-import { computed } from 'vue'
 
 // --- 表格查询 ---
 const queryParams = reactive({ pageNum: 1, pageSize: 10, drugName: '' })
 const loading = ref(false)
 const tableData = ref([])
 const total = ref(0)
-const companyOptions = ref([]) // 用于存储下拉框的医药公司列表
+const companyOptions = ref([]) 
 
-// 初始化：加载药品列表，同时加载医药公司下拉列表
 onMounted(() => {
   fetchList()
   fetchCompanyOptions()
@@ -145,7 +143,6 @@ const fetchList = async () => {
   } catch (error) { console.error(error) } finally { loading.value = false }
 }
 
-// 请求所有医药公司用于填充下拉框 (把 pageSize 设大点直接查全部)
 const fetchCompanyOptions = async () => {
   try {
     const res = await getCompanyList({ pageNum: 1, pageSize: 1000 })
@@ -171,7 +168,7 @@ const form = reactive({
   approvalNumber: '',
   specification: '',
   unitPrice: 0.00,
-  drugImage: '' // 新增图片字段
+  drugImage: '' 
 })
 
 const rules = reactive({
@@ -180,16 +177,25 @@ const rules = reactive({
   unitPrice: [{ required: true, message: '单价不能为空', trigger: 'blur' }]
 })
 
+// 【修复10】使用 nextTick 清除表单和残留数据
 const handleAdd = () => {
   dialogTitle.value = '新增药品'
-  form.id = null
   dialogVisible.value = true
+  nextTick(() => {
+    if (formRef.value) formRef.value.resetFields()
+    form.id = null
+    // 强制重置确保上次修改的数据被彻底清除
+    Object.assign(form, { drugName: '', companyId: null, approvalNumber: '', specification: '', unitPrice: 0.00, drugImage: '' })
+  })
 }
 
+// 【修复11】使用 nextTick 延迟赋值，避免破坏初始表单状态
 const handleEdit = (row) => {
   dialogTitle.value = '修改药品'
-  Object.assign(form, row)
   dialogVisible.value = true
+  nextTick(() => {
+    Object.assign(form, row)
+  })
 }
 
 const handleDelete = (row) => {
@@ -206,6 +212,7 @@ const handleCloseDialog = () => {
 }
 
 const submitForm = () => {
+  if (!formRef.value) return
   formRef.value.validate(async (valid) => {
     if (valid) {
       submitLoading.value = true
@@ -224,21 +231,18 @@ const uploadHeaders = computed(() => {
   return { Authorization: localStorage.getItem('token') }
 })
 
-// 上传成功后的回调
 const handleUploadSuccess = (res) => {
   if (res.code === 200) {
     ElMessage.success('图片上传成功！')
-    // 把后端返回的 URL 塞进表单里
     form.drugImage = res.data 
   } else {
     ElMessage.error(res.message || '上传失败')
   }
 }
 
-// 上传前的校验 (限制大小和格式)
 const beforeUpload = (file) => {
   const isImage = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif'
-  const isLt2M = file.size / 1024 / 1024 < 5 // 限制 5MB
+  const isLt2M = file.size / 1024 / 1024 < 5 
   if (!isImage) {
     ElMessage.error('药品图片只能是 JPG/PNG/GIF 格式!')
   }

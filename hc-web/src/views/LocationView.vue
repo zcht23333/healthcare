@@ -37,8 +37,8 @@
 
       <div class="pagination-container">
         <el-pagination
-          current-page.sync="queryParams.pageNum"
-          page-size.sync="queryParams.pageSize"
+          :current-page.sync="queryParams.pageNum"
+          :page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -48,7 +48,7 @@
       </div>
     </el-card>
 
-    <el-dialog :title="dialogTitle" visible.sync="dialogVisible" width="500px" @close="handleCloseDialog">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="500px" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="地点名称" prop="locationName">
           <el-input v-model="form.locationName" placeholder="请输入药店或医院名称" />
@@ -84,16 +84,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+// 【修复8】引入 nextTick
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { getLocationList, addLocation, updateLocation, deleteLocation } from '@/api/location'
-import { getCityList } from '@/api/city' // 引入获取城市列表的方法
+import { getCityList } from '@/api/city'
 import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
 const queryParams = reactive({ pageNum: 1, pageSize: 10, locationName: '' })
 const loading = ref(false)
 const tableData = ref([])
 const total = ref(0)
-const cityOptions = ref([]) // 城市下拉框数据源
+const cityOptions = ref([])
 
 onMounted(() => {
   fetchList()
@@ -108,7 +109,6 @@ const fetchList = async () => {
   } catch (error) { console.error(error) } finally { loading.value = false }
 }
 
-// 获取所有城市供下拉框选择
 const fetchCityOptions = async () => {
   try {
     const res = await getCityList({ pageNum: 1, pageSize: 1000 })
@@ -132,16 +132,37 @@ const rules = reactive({
   cityId: [{ required: true, message: '请选择城市', trigger: 'change' }]
 })
 
-const handleAdd = () => { dialogTitle.value = '新增销售地点'; form.id = null; dialogVisible.value = true }
-const handleEdit = (row) => { dialogTitle.value = '修改销售地点'; Object.assign(form, row); dialogVisible.value = true }
+// 【修复9】使用 nextTick 清空表单并完全重置对象属性
+const handleAdd = () => { 
+  dialogTitle.value = '新增销售地点'
+  dialogVisible.value = true 
+  nextTick(() => {
+    if (formRef.value) formRef.value.resetFields()
+    form.id = null
+    Object.assign(form, { locationName: '', cityId: null, address: '', contactPerson: '', contactPhone: '' })
+  })
+}
+
+// 【修复10】使用 nextTick 延迟赋值，防止污染 Element UI 表单的初始状态
+const handleEdit = (row) => { 
+  dialogTitle.value = '修改销售地点'
+  dialogVisible.value = true 
+  nextTick(() => {
+    Object.assign(form, row)
+  })
+}
+
 const handleDelete = (row) => {
   ElMessageBox.confirm(`删除地点【${row.locationName}】?`, '警告', { type: 'warning' }).then(async () => {
     await deleteLocation(row.id); ElMessage.success('删除成功！'); handleSearch()
   }).catch(() => {})
 }
+
 const handleCloseDialog = () => { if (formRef.value) formRef.value.resetFields(); form.id = null }
 
 const submitForm = () => {
+  // 防御性拦截，防止 formRef 没挂载时报错
+  if (!formRef.value) return
   formRef.value.validate(async (valid) => {
     if (valid) {
       submitLoading.value = true

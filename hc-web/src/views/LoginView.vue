@@ -15,7 +15,7 @@
           <el-input 
             v-model="loginForm.username" 
             placeholder="请输入管理员账号" 
-            prefix-icon="User" 
+            prefix-icon="el-icon-user" 
             class="custom-input"
           />
         </el-form-item>
@@ -25,7 +25,7 @@
             v-model="loginForm.password" 
             type="password" 
             placeholder="请输入密码" 
-            prefix-icon="Lock" 
+            prefix-icon="el-icon-lock" 
             show-password 
             class="custom-input"
           />
@@ -36,8 +36,8 @@
             <el-input 
               v-model="loginForm.code" 
               placeholder="验证码" 
-              prefix-icon="Key" 
-              @keyup.enter="handleLogin"
+              prefix-icon="el-icon-key" 
+              @keyup.enter.native="handleLogin"
               class="custom-input captcha-input" 
             />
             <div class="img-box" title="点击刷新验证码">
@@ -64,8 +64,8 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { fetchCaptcha, login } from '@/api/login'
-import router from '@/router' // 【关键修改1】在 Vue 2.7 中直接引入路由实例即可
-import { Message as ElMessage } from 'element-ui' // 【关键修改2】替换为 Element UI
+import router from '@/router'
+import { Message as ElMessage } from 'element-ui'
 
 // 表单数据
 const loginForm = reactive({
@@ -113,6 +113,7 @@ const handleLogin = () => {
         localStorage.setItem('token', token)
         router.push('/home')
       } catch (error) {
+        // 报错会自动被响应拦截器提示，这里只需要清空输入并刷新验证码
         loginForm.code = ''
         getCaptcha()
       } finally {
@@ -204,19 +205,32 @@ const handleLogin = () => {
   margin-bottom: 24px;
 }
 
-/* 深度定制 Element Plus 输入框：去除生硬边框，改为现代微填充风格 */
-:deep(.custom-input .el-input__wrapper) {
+/* 【修复4】深度定制 Element UI 输入框：将 .el-input__wrapper 修正为 .el-input__inner */
+/* 深度定制 Element UI 输入框：修正内边距，防止图标和文字重叠 */
+:deep(.custom-input .el-input__inner) {
   background-color: #f8f9fa;
   box-shadow: none !important;
   border: 1px solid transparent;
   border-radius: 12px;
-  padding: 4px 15px;
+  /* 顺序为：上 右 下 左。这里专门给左侧留出 38px 的空间给图标 */
+  padding: 4px 15px 4px 38px; 
+  height: 44px; 
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-:deep(.custom-input .el-input__wrapper:hover) {
+
+/* 处理 prefix-icon 对齐及左右边距问题 */
+:deep(.custom-input .el-input__prefix) {
+  line-height: 44px;
+  left: 12px; /* 让图标往右移一点，不至于太贴紧左边缘 */
+}
+:deep(.custom-input .el-input__suffix) {
+  line-height: 44px;
+  right: 12px;
+}
+:deep(.custom-input .el-input__inner:hover) {
   background-color: #f1f3f5;
 }
-:deep(.custom-input .el-input__wrapper.is-focus) {
+:deep(.custom-input .el-input__inner:focus) {
   background-color: #ffffff;
   border-color: #a1c4fd;
   box-shadow: 0 0 0 4px rgba(161, 196, 253, 0.15) !important;

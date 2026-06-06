@@ -31,8 +31,8 @@
 
       <div class="pagination-container">
         <el-pagination
-          current-page.sync="queryParams.pageNum"
-          page-size.sync="queryParams.pageSize"
+          :current-page.sync="queryParams.pageNum"
+          :page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -42,7 +42,7 @@
       </div>
     </el-card>
 
-    <el-dialog :title="dialogTitle" visible.sync="dialogVisible" width="400px" @close="handleCloseDialog">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="400px" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="城市名称" prop="cityName">
           <el-input v-model="form.cityName" placeholder="如：深圳市" />
@@ -62,7 +62,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+// 【修复5】引入 nextTick
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { getCityList, addCity, updateCity, deleteCity } from '@/api/city'
 import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
@@ -95,8 +96,26 @@ const rules = reactive({
   province: [{ required: true, message: '所属省份不能为空', trigger: 'blur' }]
 })
 
-const handleAdd = () => { dialogTitle.value = '新增城市'; form.id = null; dialogVisible.value = true }
-const handleEdit = (row) => { dialogTitle.value = '修改城市'; Object.assign(form, row); dialogVisible.value = true }
+// 【修复6】使用 nextTick 并在弹窗挂载后彻底清空表单
+const handleAdd = () => { 
+  dialogTitle.value = '新增城市'
+  dialogVisible.value = true
+  nextTick(() => {
+    if (formRef.value) formRef.value.resetFields()
+    form.id = null
+    Object.assign(form, { cityName: '', province: '' })
+  })
+}
+
+// 【修复7】使用 nextTick 延迟赋值，避免破坏 Element UI 的表单初始状态
+const handleEdit = (row) => { 
+  dialogTitle.value = '修改城市'
+  dialogVisible.value = true 
+  nextTick(() => {
+    Object.assign(form, row)
+  })
+}
+
 const handleDelete = (row) => {
   ElMessageBox.confirm(`删除城市【${row.cityName}】?`, '警告', { type: 'warning' }).then(async () => {
     await deleteCity(row.id); ElMessage.success('删除成功！'); handleSearch()
@@ -105,6 +124,8 @@ const handleDelete = (row) => {
 const handleCloseDialog = () => { if (formRef.value) formRef.value.resetFields(); form.id = null }
 
 const submitForm = () => {
+  // 防御性判断
+  if (!formRef.value) return
   formRef.value.validate(async (valid) => {
     if (valid) {
       submitLoading.value = true

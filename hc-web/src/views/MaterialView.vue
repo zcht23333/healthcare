@@ -40,8 +40,8 @@
 
       <div class="pagination-container">
         <el-pagination
-          current-page.sync="queryParams.pageNum"
-          page-size.sync="queryParams.pageSize"
+          :current-page.sync="queryParams.pageNum"
+          :page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -79,7 +79,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+// 【修复6】引入 nextTick 解决表单数据残留问题
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { getMaterialList, addMaterial, updateMaterial, deleteMaterial } from '@/api/material'
 import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
@@ -89,13 +90,20 @@ const tableData = ref([])
 const total = ref(0)
 
 onMounted(() => fetchList())
+
 const fetchList = async () => {
   loading.value = true
   try {
     const res = await getMaterialList(queryParams)
-    tableData.value = res.list; total.value = res.total
-  } catch (error) { console.error(error) } finally { loading.value = false }
+    tableData.value = res.list
+    total.value = res.total
+  } catch (error) { 
+    console.error(error) 
+  } finally { 
+    loading.value = false 
+  }
 }
+
 const handleSearch = () => { queryParams.pageNum = 1; fetchList() }
 const resetQuery = () => { queryParams.materialName = ''; handleSearch() }
 const handleSizeChange = (val) => { queryParams.pageSize = val; fetchList() }
@@ -112,16 +120,42 @@ const rules = reactive({
   materialType: [{ required: true, message: '请选择材料类型', trigger: 'change' }]
 })
 
-const handleAdd = () => { dialogTitle.value = '新增材料'; form.id = null; dialogVisible.value = true }
-const handleEdit = (row) => { dialogTitle.value = '修改材料信息'; Object.assign(form, row); dialogVisible.value = true }
+// 【修复7】新增：利用 nextTick 彻底清空表单
+const handleAdd = () => { 
+  dialogTitle.value = '新增材料'
+  dialogVisible.value = true
+  nextTick(() => {
+    if (formRef.value) formRef.value.resetFields()
+    form.id = null
+    // 手动重置防止上次编辑的数据残留
+    Object.assign(form, { materialName: '', materialType: '', description: '' })
+  })
+}
+
+// 【修复8】修改：利用 nextTick 延迟赋值，避免破坏 Element UI 的初始状态记录
+const handleEdit = (row) => { 
+  dialogTitle.value = '修改材料信息'
+  dialogVisible.value = true 
+  nextTick(() => {
+    Object.assign(form, row)
+  })
+}
+
 const handleDelete = (row) => {
   ElMessageBox.confirm(`确定删除材料【${row.materialName}】吗?`, '警告', { type: 'warning' }).then(async () => {
-    await deleteMaterial(row.id); ElMessage.success('删除成功！'); handleSearch()
+    await deleteMaterial(row.id)
+    ElMessage.success('删除成功！')
+    handleSearch()
   }).catch(() => {})
 }
-const handleCloseDialog = () => { if (formRef.value) formRef.value.resetFields(); form.id = null }
+
+const handleCloseDialog = () => { 
+  if (formRef.value) formRef.value.resetFields()
+  form.id = null 
+}
 
 const submitForm = () => {
+  if (!formRef.value) return
   formRef.value.validate(async (valid) => {
     if (valid) {
       submitLoading.value = true
@@ -129,8 +163,13 @@ const submitForm = () => {
         if (form.id) await updateMaterial(form)
         else await addMaterial(form)
         ElMessage.success(form.id ? '修改成功' : '新增成功')
-        dialogVisible.value = false; fetchList()
-      } catch (error) { console.error(error) } finally { submitLoading.value = false }
+        dialogVisible.value = false
+        fetchList()
+      } catch (error) { 
+        console.error(error) 
+      } finally { 
+        submitLoading.value = false 
+      }
     }
   })
 }

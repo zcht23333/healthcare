@@ -38,8 +38,8 @@
 
       <div class="pagination-container">
         <el-pagination
-          current-page.sync="queryParams.pageNum"
-          page-size.sync="queryParams.pageSize"
+          :current-page.sync="queryParams.pageNum"
+          :page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -49,7 +49,7 @@
       </div>
     </el-card>
 
-    <el-dialog :title="dialogTitle"  visible.sync="dialogVisible"  width="500px" @close="handleCloseDialog">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="500px" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="登录账号" prop="username">
           <el-input v-model="form.username" placeholder="请输入工号或手机号作为账号" :disabled="form.id != null" />
@@ -78,7 +78,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+// 【修复8】引入 nextTick
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { getDoctorList, addDoctor, updateDoctor, deleteDoctor, resetDoctorPwd } from '@/api/doctor'
 import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
@@ -111,8 +112,26 @@ const rules = reactive({
   realName: [{ required: true, message: '真实姓名不能为空', trigger: 'blur' }]
 })
 
-const handleAdd = () => { dialogTitle.value = '新增医生'; form.id = null; dialogVisible.value = true }
-const handleEdit = (row) => { dialogTitle.value = '修改医生信息'; Object.assign(form, row); dialogVisible.value = true }
+// 【修复9】使用 nextTick 彻底清空表单残留数据
+const handleAdd = () => { 
+  dialogTitle.value = '新增医生'
+  dialogVisible.value = true 
+  nextTick(() => {
+    if (formRef.value) formRef.value.resetFields()
+    form.id = null
+    Object.assign(form, { username: '', realName: '', hospitalName: '', department: '', phone: '' })
+  })
+}
+
+// 【修复10】使用 nextTick 延迟赋值，避免破坏 Element UI 的初始表单状态
+const handleEdit = (row) => { 
+  dialogTitle.value = '修改医生信息'
+  dialogVisible.value = true 
+  nextTick(() => {
+    Object.assign(form, row)
+  })
+}
+
 const handleDelete = (row) => {
   ElMessageBox.confirm(`确定删除医生【${row.realName}】的信息吗?`, '警告', { type: 'warning' }).then(async () => {
     await deleteDoctor(row.id); ElMessage.success('删除成功！'); handleSearch()
@@ -134,6 +153,8 @@ const handleResetPwd = (row) => {
 const handleCloseDialog = () => { if (formRef.value) formRef.value.resetFields(); form.id = null }
 
 const submitForm = () => {
+  // 防御性判断
+  if (!formRef.value) return
   formRef.value.validate(async (valid) => {
     if (valid) {
       submitLoading.value = true

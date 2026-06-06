@@ -35,8 +35,8 @@
 
       <div class="pagination-container">
         <el-pagination
-          current-page.sync="queryParams.pageNum"
-          page-size.sync="queryParams.pageSize"
+          :current-page.sync="queryParams.pageNum"
+          :page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -46,7 +46,7 @@
       </div>
     </el-card>
 
-    <el-dialog :title="dialogTitle" visible.sync="dialogVisible" width="900px" top="5vh" @close="handleCloseDialog">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="900px" top="5vh" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         
         <el-row :gutter="20">
@@ -57,7 +57,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="发布日期" prop="publishDate">
-              <el-date-picker v-model="form.publishDate" type="date" placeholder="选择日期" value-format="YYYY-MM-DD" style="width: 100%" />
+              <el-date-picker v-model="form.publishDate" type="date" placeholder="选择日期" value-format="yyyy-MM-dd" style="width: 100%" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -92,7 +92,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, shallowRef, onBeforeUnmount } from 'vue'
+// 【修复6】引入 nextTick
+import { ref, reactive, onMounted, shallowRef, onBeforeUnmount, nextTick } from 'vue'
 import { getPolicyList, addPolicy, updatePolicy, deletePolicy } from '@/api/policy'
 import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
@@ -139,16 +140,39 @@ const rules = reactive({
   policyContent: [{ required: true, message: '正文内容不能为空', trigger: 'blur' }]
 })
 
-const handleAdd = () => { dialogTitle.value = '发布医保政策'; form.id = null; dialogVisible.value = true }
-const handleEdit = (row) => { dialogTitle.value = '修改医保政策'; Object.assign(form, row); dialogVisible.value = true }
+// 【修复7】新增：利用 nextTick 彻底清空表单（含富文本内容）
+const handleAdd = () => { 
+  dialogTitle.value = '发布医保政策'
+  dialogVisible.value = true
+  nextTick(() => {
+    if (formRef.value) formRef.value.resetFields()
+    form.id = null
+    Object.assign(form, { policyTitle: '', publishDate: '', policyContent: '' })
+  })
+}
+
+// 【修复8】修改：利用 nextTick 延迟赋值，避免破坏初始状态记录
+const handleEdit = (row) => { 
+  dialogTitle.value = '修改医保政策'
+  dialogVisible.value = true
+  nextTick(() => {
+    Object.assign(form, row)
+  })
+}
+
 const handleDelete = (row) => {
   ElMessageBox.confirm(`删除政策【${row.policyTitle}】?`, '警告', { type: 'warning' }).then(async () => {
     await deletePolicy(row.id); ElMessage.success('删除成功！'); handleSearch()
   }).catch(() => {})
 }
-const handleCloseDialog = () => { if (formRef.value) formRef.value.resetFields(); form.id = null }
+
+const handleCloseDialog = () => { 
+  if (formRef.value) formRef.value.resetFields()
+  form.id = null 
+}
 
 const submitForm = () => {
+  if (!formRef.value) return
   formRef.value.validate(async (valid) => {
     if (valid) {
       // 拦截空内容
@@ -166,24 +190,20 @@ const submitForm = () => {
 }
 
 // ================= WangEditor 专属配置区域 =================
-// 编辑器实例，必须用 shallowRef
 const editorRef = shallowRef()
-const mode = 'default' // 或 'simple'
-const toolbarConfig = {} // 工具栏配置（全量）
+const mode = 'default' 
+const toolbarConfig = {} 
 
-// 编辑器配置：深度对接 Java 后端的图片上传接口
 const editorConfig = {
   placeholder: '请输入政策正文内容，支持直接粘贴截图并自动上传...',
   MENU_CONF: {
     uploadImage: {
-      server: 'http://localhost:8080/upload', // 对接你的后端上传接口
-      fieldName: 'file', // SpringMVC 中 MultipartFile 参数的名字
-      // 必须带上 Token，否则会被后端 AuthInterceptor 拦截打回 401
+      server: 'http://localhost:8080/upload',
+      fieldName: 'file', 
       headers: { Authorization: localStorage.getItem('token') },
-      // 自定义插入图片逻辑：获取后端返回的 res.data (图片URL)，交给编辑器渲染
       customInsert(res, insertFn) {
         if (res.code === 200) {
-          insertFn(res.data) // 将拿到的 http://... 图片地址插入到编辑器
+          insertFn(res.data) 
         } else {
           ElMessage.error('图片上传失败：' + res.message)
         }
@@ -192,10 +212,8 @@ const editorConfig = {
   }
 }
 
-// 记录 editor 实例
 const handleCreated = (editor) => { editorRef.value = editor }
 
-// 组件销毁时，也及时销毁编辑器
 onBeforeUnmount(() => {
   const editor = editorRef.value
   if (editor == null) return

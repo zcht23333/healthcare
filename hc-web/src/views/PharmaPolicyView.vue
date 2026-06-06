@@ -18,11 +18,11 @@
 
       <el-table v-loading="loading" :data="tableData" border stripe style="width: 100%" :header-cell-style="{background:'#f5f7fa', color:'#606266'}">
         <el-table-column type="index" label="序号" width="60" align="center" />
-      <el-table-column prop="companyName" label="所属医药公司" min-width="180">
-        <template #default="scope">
-          {{ scope.row.companyName || '未知' }}
-        </template>
-      </el-table-column>
+        <el-table-column prop="companyName" label="所属医药公司" min-width="180">
+          <template #default="scope">
+            {{ scope.row.companyName || '未知' }}
+          </template>
+        </el-table-column>
         <el-table-column prop="policyTitle" label="政策标题" min-width="250" show-overflow-tooltip>
           <template #default="scope">
             <span style="font-weight: bold; color: #409EFF;">{{ scope.row.policyTitle }}</span>
@@ -40,8 +40,8 @@
 
       <div class="pagination-container">
         <el-pagination
-          current-page.sync="queryParams.pageNum"
-          page-size.sync="queryParams.pageSize"
+          :current-page.sync="queryParams.pageNum"
+          :page-size.sync="queryParams.pageSize"
           :page-sizes="[5, 10, 20, 50]"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -51,7 +51,7 @@
       </div>
     </el-card>
 
-    <el-dialog :title="dialogTitle" visible.sync="dialogVisible" width="900px" top="5vh" @close="handleCloseDialog">
+    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="900px" top="5vh" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="110px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -71,12 +71,12 @@
         <el-row :gutter="20">
           <el-col :span="12">
             <el-form-item label="开始日期" prop="startDate">
-              <el-date-picker v-model="form.startDate" type="date" placeholder="选择开始日期" value-format="YYYY-MM-DD" style="width: 100%" />
+              <el-date-picker v-model="form.startDate" type="date" placeholder="选择开始日期" value-format="yyyy-MM-dd" style="width: 100%" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="结束日期" prop="endDate">
-              <el-date-picker v-model="form.endDate" type="date" placeholder="选择结束日期" value-format="YYYY-MM-DD" style="width: 100%" />
+              <el-date-picker v-model="form.endDate" type="date" placeholder="选择结束日期" value-format="yyyy-MM-dd" style="width: 100%" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -99,9 +99,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, shallowRef, onBeforeUnmount } from 'vue'
+// 【修复8】引入 nextTick 解决表单数据残留问题
+import { ref, reactive, onMounted, shallowRef, onBeforeUnmount, nextTick } from 'vue'
 import { getPharmaPolicyList, addPharmaPolicy, updatePharmaPolicy, deletePharmaPolicy } from '@/api/pharmaPolicy'
-import { getCompanyList } from '@/api/company' // 引入公司接口
+import { getCompanyList } from '@/api/company'
 import { Message as ElMessage, MessageBox as ElMessageBox } from 'element-ui'
 
 import '@wangeditor/editor/dist/css/style.css'
@@ -150,16 +151,36 @@ const rules = reactive({
   policyContent: [{ required: true, message: '政策内容不能为空', trigger: 'blur' }]
 })
 
-const handleAdd = () => { dialogTitle.value = '发布公司政策'; form.id = null; dialogVisible.value = true }
-const handleEdit = (row) => { dialogTitle.value = '修改公司政策'; Object.assign(form, row); dialogVisible.value = true }
+// 【修复9】使用 nextTick 清空表单，并完全重置所有字段的值
+const handleAdd = () => { 
+  dialogTitle.value = '发布公司政策'
+  dialogVisible.value = true 
+  nextTick(() => {
+    if (formRef.value) formRef.value.resetFields()
+    form.id = null
+    Object.assign(form, { companyId: null, policyTitle: '', startDate: '', endDate: '', policyContent: '' })
+  })
+}
+
+// 【修复10】使用 nextTick 延迟赋值，防止污染初始状态
+const handleEdit = (row) => { 
+  dialogTitle.value = '修改公司政策'
+  dialogVisible.value = true 
+  nextTick(() => {
+    Object.assign(form, row)
+  })
+}
+
 const handleDelete = (row) => {
   ElMessageBox.confirm(`删除政策【${row.policyTitle}】?`, '警告', { type: 'warning' }).then(async () => {
     await deletePharmaPolicy(row.id); ElMessage.success('删除成功！'); handleSearch()
   }).catch(() => {})
 }
+
 const handleCloseDialog = () => { if (formRef.value) formRef.value.resetFields(); form.id = null }
 
 const submitForm = () => {
+  if (!formRef.value) return
   formRef.value.validate(async (valid) => {
     if (valid) {
       if (form.policyContent === '<p><br></p>') { ElMessage.warning('内容不能为空'); return }
