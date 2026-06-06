@@ -82,10 +82,10 @@
         </el-form-item>
 
         <el-form-item label="批准文号" prop="approvalNumber">
-          <el-input v-model="form.approvalNumber" placeholder="例如：国药准字H12345678" />
+          <el-input v-model="form.approvalNumber" placeholder="请输入批准文号" />
         </el-form-item>
         <el-form-item label="药品规格" prop="specification">
-          <el-input v-model="form.specification" placeholder="例如：0.5g*10粒/盒" />
+          <el-input v-model="form.specification" placeholder="请输入药品规格" />
         </el-form-item>
         <el-form-item label="单价" prop="unitPrice">
           <el-input-number v-model="form.unitPrice" :precision="2" :step="1" :min="0" style="width: 100%" />

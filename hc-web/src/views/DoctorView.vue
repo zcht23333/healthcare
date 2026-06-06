@@ -52,7 +52,7 @@
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="500px" @close="handleCloseDialog">
       <el-form :model="form" :rules="rules" ref="formRef" label-width="100px">
         <el-form-item label="登录账号" prop="username">
-          <el-input v-model="form.username" placeholder="请输入工号或手机号作为账号" :disabled="form.id != null" />
+          <el-input v-model="form.username" placeholder="请输入工号" :disabled="form.id != null" />
         </el-form-item>
         <el-form-item label="医生姓名" prop="realName">
           <el-input v-model="form.realName" placeholder="请输入医生真实姓名" />
@@ -61,7 +61,7 @@
           <el-input v-model="form.hospitalName" placeholder="请输入所属医院名称" />
         </el-form-item>
         <el-form-item label="所属科室" prop="department">
-          <el-input v-model="form.department" placeholder="如：内科、外科" />
+          <el-input v-model="form.department" placeholder="请输入所属科室" />
         </el-form-item>
         <el-form-item label="联系电话" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入医生联系电话" />

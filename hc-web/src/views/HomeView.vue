@@ -10,7 +10,7 @@
       <el-col :span="6">
         <div class="stat-card">
           <div class="icon-wrapper blue">
-            <el-icon><el-icon-office-building /></el-icon>
+            <i class="el-icon-office-building"></i>
           </div>
           <div class="stat-info">
             <div class="stat-title">入驻医药公司</div>
@@ -21,7 +21,7 @@
       <el-col :span="6">
         <div class="stat-card">
           <div class="icon-wrapper green">
-            <el-icon><el-icon-first-aid-kit /></el-icon>
+            <i class="el-icon-first-aid-kit"></i>
           </div>
           <div class="stat-info">
             <div class="stat-title">平台收录药品</div>
@@ -32,7 +32,7 @@
       <el-col :span="6">
         <div class="stat-card">
           <div class="icon-wrapper orange">
-            <el-icon><el-icon-user-solid /></el-icon>
+            <i class="el-icon-user-solid"></i>
           </div>
           <div class="stat-info">
             <div class="stat-title">注册医生总数</div>
@@ -43,7 +43,7 @@
       <el-col :span="6">
         <div class="stat-card">
           <div class="icon-wrapper purple">
-            <el-icon><el-icon-document /></el-icon>
+            <i class="el-icon-document"></i>
           </div>
           <div class="stat-info">
             <div class="stat-title">发布医保政策</div>
@@ -120,7 +120,7 @@ const initCharts = () => {
   if (pieChartRef.value) {
     pieChart = echarts.init(pieChartRef.value)
     pieChart.setOption({
-      color: morandiColors, // 注入灵魂配色
+      color: morandiColors, 
       tooltip: { 
         trigger: 'item', 
         formatter: '{b} : {c} 种 ({d}%)',
