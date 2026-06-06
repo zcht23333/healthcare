@@ -167,7 +167,7 @@ html, body, #app {
   overflow: hidden !important; 
 }
 
-/* 2. 定制全局极为优雅的毛玻璃纤细滚动条 */
+/* 2. 定制全局毛玻璃纤细滚动条 */
 ::-webkit-scrollbar {
   width: 6px;  /* 纵向滚动条宽度 */
   height: 6px; /* 横向滚动条高度 */

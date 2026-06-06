@@ -14,7 +14,7 @@
       <div class="menu-group-title">数据监控</div>
       <el-menu-item index="/home">
         <el-icon><el-icon-data-line /></el-icon>
-        <span>首页大盘</span>
+        <span>首页</span>
       </el-menu-item>
 
       <div class="menu-group-title">核心业务</div>

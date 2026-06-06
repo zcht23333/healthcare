@@ -101,7 +101,6 @@ const barChartRef = ref(null)
 let pieChart = null
 let barChart = null
 
-// 专属莫兰迪配色盘，极其优雅
 const morandiColors = ['#a1c4fd', '#ffecd2', '#a8edea', '#fed6e3', '#e0c3fc', '#8fd3f4']
 
 const fetchDashboardData = async () => {
